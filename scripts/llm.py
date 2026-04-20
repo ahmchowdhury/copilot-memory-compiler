@@ -40,7 +40,7 @@ def get_client():
 
 def get_model() -> str:
     """Return the model/deployment name to use."""
-    return os.environ.get("LLM_MODEL", os.environ.get("AZURE_OPENAI_DEPLOYMENT", "gpt-4o"))
+    return os.environ.get("LLM_MODEL", os.environ.get("AZURE_OPENAI_DEPLOYMENT", "gpt-5.4-mini"))
 
 
 def chat(messages: list[dict], json_mode: bool = False, max_tokens: int = 16000) -> str:

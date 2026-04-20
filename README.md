@@ -134,7 +134,7 @@ Three layers, following Karpathy's design:
     ```env
     AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
     AZURE_OPENAI_API_KEY=your-key-here
-    AZURE_OPENAI_DEPLOYMENT=gpt-4o
+    AZURE_OPENAI_DEPLOYMENT=gpt-5.4-mini
     AZURE_OPENAI_API_VERSION=2024-12-01-preview
     ```
 
@@ -142,7 +142,7 @@ Three layers, following Karpathy's design:
 
     ```env
     OPENAI_API_KEY=sk-...
-    LLM_MODEL=gpt-4o
+    LLM_MODEL=gpt-5.4-mini
     ```
 
 ## Usage
