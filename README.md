@@ -9,6 +9,8 @@ Instead of RAG — where the LLM re-discovers knowledge from scratch on every qu
 > *"The wiki is the codebase; the LLM is the programmer; Obsidian is the IDE."*
 > — Andrej Karpathy
 
+* [Two Tools, Two Roles](#two-tools-two-roles)
+* [What You Need](#what-you-need)
 * [How It Works](#how-it-works)
 * [Architecture](#architecture)
 * [Getting Started](#getting-started)
@@ -28,6 +30,27 @@ Instead of RAG — where the LLM re-discovers knowledge from scratch on every qu
 * [Costs](#costs)
 * [Contributing](#contributing)
 * [License](#license)
+
+## Two Tools, Two Roles
+
+This project uses **two separate tools** for different purposes:
+
+| Tool | Role | What It Does |
+|------|------|-------------|
+| **GitHub Copilot CLI** | Data source + injection | Where you have conversations. Stores session history in a local SQLite database. Knowledge gets injected back via `.github/copilot-instructions.md`. |
+| **Azure OpenAI / OpenAI** | Compilation engine | The LLM brain that reads raw conversation logs and compiles them into structured wiki articles. Also powers queries and lint checks. |
+
+**Why both?** In the original [Claude Code version](https://github.com/coleam00/claude-memory-compiler), Claude does everything — it's both the conversation tool *and* the compilation engine (via the Agent SDK). GitHub Copilot CLI doesn't expose an agent SDK, so we split the roles: Copilot CLI handles the data pipeline (capture → inject), and Azure OpenAI handles the LLM heavy lifting (compile → query).
+
+## What You Need
+
+| Requirement | What It Is | Required? |
+|-------------|-----------|-----------|
+| **GitHub Copilot CLI** | Terminal AI assistant ([copilot in the CLI](https://docs.github.com/en/copilot/github-copilot-in-the-cli)) — requires a GitHub Copilot subscription (Individual, Business, or Enterprise) | **Yes** — this is where your conversation data comes from |
+| **Azure OpenAI or OpenAI API key** | LLM API access for compilation, queries, and lint | **Yes** — needed for `compile.py`, `query.py`, and `lint.py` |
+| **Python 3.12+** | Runtime (auto-managed by uv) | **Yes** — uv downloads it automatically if missing |
+
+> **Cost note:** You need both a GitHub Copilot subscription *and* an Azure OpenAI / OpenAI API key. The Copilot subscription covers your conversations; the API key covers compilation. Harvesting is always free (local SQLite read).
 
 ## How It Works
 
@@ -60,10 +83,10 @@ Three layers, following Karpathy's design:
 
 ### Prerequisites
 
-- **Python 3.12+**
-- **[uv](https://docs.astral.sh/uv/)** — Python package manager (installed automatically if missing)
-- **GitHub Copilot CLI** — You need an existing session history in `~/.copilot/session-store.db`
-- **An LLM API key** — Azure OpenAI or OpenAI (for compile, query, and lint operations)
+- **GitHub Copilot CLI** — requires a [GitHub Copilot subscription](https://github.com/features/copilot) (Individual, Business, or Enterprise). You need existing session history in `~/.copilot/session-store.db`.
+- **Azure OpenAI or OpenAI API key** — for compile, query, and lint operations (see [What You Need](#what-you-need))
+- **Python 3.12+** — auto-managed by uv; you don't need to install it manually
+- **[uv](https://docs.astral.sh/uv/)** — Python package manager (installed in setup below)
 
 ### Installation
 
